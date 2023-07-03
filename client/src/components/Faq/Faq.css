@@ -190,3 +190,8 @@ form {
 .button{
   margin:auto;
 }
+.error{
+	color: red;
+	font-size: 13px;
+    padding-left: 15px;
+}

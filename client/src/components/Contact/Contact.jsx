@@ -26,11 +26,12 @@ const Contact = () => {
 	const { name, email, phoneNo, message } = contact;
 
 	const onChangeHandler = (e) => {
+		const {name, value} = e.target;
 		setContact({
 			...contact,
-			[e.target.name]: e.target.value,
+			[name]: value,
 		});
-		const errorObj = contactValidation[e.target.name](e.target.value);
+		const errorObj = contactValidation[name](value);
 		setError((prev)=>{
 			return {...prev, ...errorObj}
 		})

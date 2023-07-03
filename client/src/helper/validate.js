@@ -98,7 +98,8 @@ function emailVerify(error ={}, values){
 
 // Contact Form Validation
 
-const emailRegex = /^\w+([\.-]?\w+)*@(gmail\.com|yahoo\.com|hotmail\.com|aol\.com|outlook\.com)$/;
+const emailRegex = /^\w+(?:[\.-]\w+)*@(?:gmail\.com|yahoo\.com|hotmail\.com|aol\.com|outlook\.com)$/;
+;
 const phoneRegex =/^\d{10}$/;
 
 export const contactValidation = {
