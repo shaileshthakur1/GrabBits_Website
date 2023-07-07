@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import { Server } from "./utils/config.js";
 import connectDB from "./database/db.js";
 import { errorMiddleware, notFound } from "./middleware/errorMiddleware.js";
@@ -12,6 +13,9 @@ import userRouter from "./routes/user.routes.js";
 const PORT = Server.PORT;
 
 const app = express();
+
+//security 
+app.use(helmet());
 
 // DB connection
 connectDB();
