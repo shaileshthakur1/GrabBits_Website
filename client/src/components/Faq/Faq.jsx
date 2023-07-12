@@ -4,7 +4,7 @@ import http from '../../api';
 import Swal from 'sweetalert2';
 import './Faq.css';
 import { MdOutlineContactSupport } from 'react-icons/md';
-
+import { contactValidation } from '../../helper/validate';
 import { Button, Input, Textarea } from '../common';
 
 const Faq = () => {
@@ -14,6 +14,7 @@ const Faq = () => {
 		phoneNo: '',
 		message: '',
 	});
+	const [error, setError] = useState({})
 
 	const [selectedId, setSelectedId] = useState(0);
 
@@ -44,18 +45,28 @@ const Faq = () => {
 	const { name, email, phoneNo, message } = contact;
 
 	const onChangeHandler = (e) => {
+		const {name, value} = e.target;
 		setContact({
 			...contact,
-			[e.target.name]: e.target.value,
+			[name]: value,
 		});
+		const errorMessage = contactValidation[name](value)
+		setError((prev)=>{
+           return {...prev, ...errorMessage}
+		})
 	};
 
 	const submitHandler = async (e) => {
 		e.preventDefault();
-		if (name === '' || email === '' || phoneNo === '' || message === '') {
-			// AlertContext.setAlert("Please enter all fields", "danger"); add a state
-			alert('Please fill all  the fields');
-		}
+		let submitable = true;
+		Object.values(error).forEach((err)=>{
+		   if(err != false){
+			   submitable = false;
+			   return ;
+		   }
+		})
+
+   if(submitable){
 		try {
 			http.post('/contact/createContact', contact).then(
 				() => {
@@ -81,6 +92,8 @@ const Faq = () => {
 				title: 'Oops...',
 				text: error,
 			});
+		}}else{
+			alert("Enter Valid Values in all Fields.")
 		}
 		setContact({
 			name: '',
@@ -126,6 +139,7 @@ const Faq = () => {
 									name="name"
 									required
 								/>
+								{error.name? <p className="error">{error.name}</p> : null}
 							</div>
 							<div className="inputText">
 								<Input
@@ -137,6 +151,7 @@ const Faq = () => {
 									name="email"
 									required
 								/>
+								{error.email? <p className="error">{error.email}</p> : null}
 							</div>
 							<div className="inputText">
 								<Input
@@ -147,6 +162,7 @@ const Faq = () => {
 									name="phoneNo"
 									required
 								/>
+								{error.phoneNo? <p className="error">{error.phoneNo}</p> : null}
 							</div>
 							<div className="inputText">
 								<Textarea
@@ -158,6 +174,7 @@ const Faq = () => {
 									name="message"
 									required
 								/>
+								{error.message? <p className="error">{error.message}</p> : null}
 							</div>
 
 							<div className="button">

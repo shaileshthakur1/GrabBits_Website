@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import classes from './Contact.module.css';
 import http from '../../api';
 import Swal from 'sweetalert2';
+import { contactValidation } from '../../helper/validate';
 
 import { Button, Input, Textarea } from '../common';
 import {
@@ -20,21 +21,32 @@ const Contact = () => {
 		phoneNo: '',
 		message: '',
 	});
+	const [error, setError] = useState({})
 
 	const { name, email, phoneNo, message } = contact;
 
 	const onChangeHandler = (e) => {
+		const {name, value} = e.target;
 		setContact({
 			...contact,
-			[e.target.name]: e.target.value,
+			[name]: value,
 		});
+		const errorObj = contactValidation[name](value);
+		setError((prev)=>{
+			return {...prev, ...errorObj}
+		})
 	};
 	const submitHandler = async (e) => {
 		e.preventDefault();
-		if (name === '' || email === '' || phoneNo === '' || message === '') {
-			// AlertContext.setAlert("Please enter all fields", "danger"); add a state
-			alert('Please fill all  the fields');
-		}
+		 let submitable = true;
+		 Object.values(error).forEach((err)=>{
+			if(err != false){
+				submitable = false;
+				return ;
+			}
+		 })
+ 
+	if(submitable){
 		try {
 			http.post('/contact/createContact', contact).then(
 				() => {
@@ -67,6 +79,11 @@ const Contact = () => {
 			phoneNo: '',
 			message: '',
 		});
+	 }else{
+			alert("Enter Valid Values in all Fields.")
+			
+		}
+	
 	};
 
 	return (
@@ -126,6 +143,7 @@ const Contact = () => {
 								name="name"
 								required
 							/>
+							{error.name? <p className={classes.error}>{error.name}</p> : null}
 							<Input
 								onChange={onChangeHandler}
 								type="text"
@@ -134,6 +152,7 @@ const Contact = () => {
 								name="email"
 								required
 							/>
+								{error.email? <p className={classes.error}>{error.email}</p> : null}
 							<Input
 								onChange={onChangeHandler}
 								type="text"
@@ -142,6 +161,7 @@ const Contact = () => {
 								name="phoneNo"
 								required
 							/>
+								{error.phoneNo? <p className={classes.error}>{error.phoneNo}</p> : null}
 							<Textarea
 								onChange={onChangeHandler}
 								type="text"
@@ -150,6 +170,7 @@ const Contact = () => {
 								name="message"
 								required
 							/>
+								{error.message? <p className={classes.error}>{error.message}</p> : null}
 							<div className={classes.button}>
 								<Button
 									padding="8px 24px"

@@ -95,3 +95,42 @@ function emailVerify(error ={}, values){
 
     return error;
 }
+
+// Contact Form Validation
+
+const emailRegex = /^\w+(?:[\.-]\w+)*@(?:gmail\.com|yahoo\.com|hotmail\.com|aol\.com|outlook\.com)$/;
+;
+const phoneRegex =/^\d{10}$/;
+
+export const contactValidation = {
+  name: (value) => {
+      return value.trim().length < 6
+        ? {name: "Name must be atleast 6 characters long." }
+        : { name: false };
+    
+  },
+  email: (value) => {
+    return emailRegex.test(value)
+      ? {  email: false }
+      : {  email: "Please enter a valid email address" }
+  },
+
+  phoneNo: (value)=>{
+    return phoneRegex.test(value)
+    ? {phoneNo: false }
+    : {
+        phoneNo:
+          "Please Enter valid Phone number",
+      };
+  },
+
+  message: (value)=>{
+    const numOfWords = value.trim().split(/\s+/).length;
+
+    if(numOfWords < 10 || numOfWords > 50){
+      return {message: "Describe your message in 10 to 50 words"}
+    }else{
+      return {message: false}
+    }
+  }
+}
