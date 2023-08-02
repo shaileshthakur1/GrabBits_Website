@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import img from '../../assets/Logo.png';
 import classes from './Navbar.module.css';
+import {BsFillMoonFill, BsFillSunFill} from 'react-icons/bs'
+import { useTheme } from '../../hooks/useTheme';
 
 const Navbar = () => {
+	const {isLight, toggleTheme} = useTheme()
+
 	const [open, setOpen] = useState(false);
 
 	const changeOpen = () => {
@@ -68,6 +72,10 @@ const Navbar = () => {
 									Contact
 								</li>
 							</NavLink>
+
+							<li className={classes.nav__item} onClick={toggleTheme}>
+								{isLight ? <BsFillSunFill /> : <BsFillMoonFill />}
+							</li>
 						</ul>
 						{open && (
 							<i
